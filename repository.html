@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Repository — Atlas</title>
+<title>Repository · Atlas</title>
 <meta name="description" content="Repository detail across the Stellar ecosystem.">
 <link rel="stylesheet" href="atlas.css">
 </head>
@@ -31,18 +31,18 @@
   var repos = window.AtlasData.buildRepositories(catalog);
   var r = repos.filter(function (x) { return x.slug === slug; })[0];
   if (!r) { box.innerHTML = '<div class="empty"><h3>Repository not found.</h3><p>Try changing your search.</p><p><a class="btn btn-secondary" href="index.html#explore">Clear filters</a></p></div>'; return; }
-  document.title = r.name + ' — Atlas';
+  document.title = r.name + ' · Atlas';
   document.getElementById('crumb').textContent = r.name;
   var gh = r.repositoryUrl;
   var info = [
-    ['Category', (r.category || []).join(', ')], ['Language', r.primaryLanguage || '—'],
-    ['Status', r.status], ['License', r.license || '—'],
-    ['Stars', r.stars == null ? '—' : r.stars], ['Forks', r.forks == null ? '—' : r.forks],
-    ['Last update', window.AtlasData.timeAgo(r.updatedAt)], ['Observed', r.observedAt || '—']
+    ['Category', (r.category || []).join(', ')], ['Language', r.primaryLanguage || 'Not published'],
+    ['Status', r.status], ['License', r.license || 'Not published'],
+    ['Stars', r.stars == null ? 'Not published' : r.stars], ['Forks', r.forks == null ? 'Not published' : r.forks],
+    ['Last update', window.AtlasData.timeAgo(r.updatedAt)], ['Observed', r.observedAt || 'Not published']
   ].map(function (row) { return '<div class="info-cell"><dt>' + row[0] + '</dt><dd>' + esc(row[1]) + '</dd></div>'; }).join('');
   var funding = (r.fundingHistory || []).length
     ? '<ul class="timeline">' + r.fundingHistory.map(function (f) {
-        return '<li><span class="year">' + esc(f.year || '—') + '</span><b>' + esc(f.program) + '</b><span>' + esc(f.result || '') + (f.amount != null ? ' · $' + Number(f.amount).toLocaleString('en-US') : '') + '</span></li>';
+        return '<li><span class="year">' + esc(f.year || 'Not published') + '</span><b>' + esc(f.program) + '</b><span>' + esc(f.result || '') + (f.amount != null ? ' · $' + Number(f.amount).toLocaleString('en-US') : '') + '</span></li>';
       }).join('') + '</ul>'
     : '<p style="color:var(--muted)">No funding history on record. A missing entry means the source does not publish it.</p>';
   var builders = r.organization
@@ -62,7 +62,7 @@
     '<dl class="info-grid">' + info + '</dl>' +
     '<h2 style="font-size:22px">Funding &amp; programs</h2>' + funding +
     '<h2 style="font-size:22px">About the project</h2><p style="color:var(--muted);max-width:68ch">' + esc(r.longDescription || r.description || 'No long description on record.') + '</p>' +
-    '<h3 style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">What it does</h3><p style="max-width:68ch">' + esc(r.description || '—') + '</p>' +
+    '<h3 style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">What it does</h3><p style="max-width:68ch">' + esc(r.description || 'Not published') + '</p>' +
     '<h3 style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Technology</h3>' + tech +
     '<h2 style="font-size:22px;margin-top:28px">Builders</h2>' + builders +
     '<h2 style="font-size:22px;margin-top:28px">Related repositories</h2><div class="related">' + (related || '<p style="color:var(--muted)">—</p>') + '</div>';

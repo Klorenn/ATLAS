@@ -4,10 +4,10 @@ Thanks for taking the time. ATLAS is an open observatory for the Stellar ecosyst
 
 ## Ways to contribute
 
-- **Report a bug** — open an issue with the [bug report template](.github/ISSUE_TEMPLATE/bug_report.yml).
-- **Propose a change** — open an issue with the [feature request template](.github/ISSUE_TEMPLATE/feature_request.yml). Describe the problem before the solution.
-- **Correct the data** — if a repository is attributed to the wrong builder, project or program, open an issue and include the evidence (a link to the source that proves it). Data corrections are the most valuable kind of contribution here.
-- **Send code** — see below.
+- **Report a bug.** Open an issue with the [bug report template](.github/ISSUE_TEMPLATE/bug_report.yml).
+- **Propose a change.** Open an issue with the [feature request template](.github/ISSUE_TEMPLATE/feature_request.yml). Describe the problem before the solution.
+- **Correct the data.** If a repository is attributed to the wrong builder, project or program, open an issue and include the evidence (a link to the source that proves it). Data corrections are the most valuable kind of contribution here.
+- **Send code.** See below.
 
 For anything larger than a fix, open an issue first. It is cheaper to agree on the approach than to rewrite a pull request.
 
@@ -20,7 +20,7 @@ npm install
 npm run dev
 ```
 
-Requires Node.js `^18.0.0 || >=20.0.0` and npm. No environment variables are needed — the catalog snapshot in `web/public/data/catalog.json` is committed.
+Requires Node.js `^18.0.0 || >=20.0.0` and npm. No environment variables are needed: the catalog snapshot in `web/public/data/catalog.json` is committed.
 
 `@supabase/supabase-js` is installed but not imported anywhere yet. It is reserved for a planned edge function that will refresh the catalog automatically. Leave it in `package.json`.
 
@@ -31,7 +31,7 @@ The React app under `web/` is the primary experience. The files at the repositor
 1. Branch from the default branch: `git checkout -b fix/short-description`.
 2. Keep the change focused. One concern per pull request.
 3. Follow the surrounding code: TypeScript with `strict` on, Tailwind utility classes, the `@/` alias for imports from `src/`.
-4. Respect the data contract. When the source does not publish a value, it stays `null` — never `0`, `false` or a guess. Filtering, sorting and pagination belong in `src/lib/catalog.ts`, not in components.
+4. Respect the data contract. When the source does not publish a value, it stays `null`, never `0`, `false` or a guess. Filtering, sorting and pagination belong in `src/lib/catalog.ts`, not in components.
 5. Run the only automated check there is:
 
    ```bash

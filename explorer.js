@@ -458,7 +458,7 @@
 
       const associations = item.associations.map((entry) => {
         const name = catalog.projects.find((project) => project.slug === entry.slug)?.name ?? entry.slug;
-        return `<li><span class="sa-mono">${escapeHtml(entry.slug)}</span> — ${escapeHtml(name)}
+        return `<li><span class="sa-mono">${escapeHtml(entry.slug)}</span> · ${escapeHtml(name)}
           <span class="sa-ev">${escapeHtml(entry.evidence)}</span></li>`;
       }).join('');
 

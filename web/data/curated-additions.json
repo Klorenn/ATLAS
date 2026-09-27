@@ -1,0 +1,54 @@
+{
+  "_comment": "Entries that the upstream pipeline in data/ does not produce, because they describe ATLAS itself. Merged by scripts/extract-catalog.mjs on every run, so they survive a regeneration of data/catalog.js. Same shape as that file. Every value here is observed, not estimated.",
+  "projects": [
+    {
+      "slug": "atlas",
+      "name": "ATLAS",
+      "category": "Tooling",
+      "types": [
+        "Explorer",
+        "Analytics"
+      ],
+      "status": "Live",
+      "description": "An open observatory for discovering projects and repositories across the Stellar ecosystem. Turns a public directory into a catalog you can browse by program, category, language and builder.",
+      "website": "https://atlastelluscoop.vercel.app",
+      "updatedAt": "2026-09-27",
+      "observedAt": "2026-09-27"
+    }
+  ],
+  "repositories": [
+    {
+      "id": "github:klorenn/atlas",
+      "fullName": "Klorenn/ATLAS",
+      "url": "https://github.com/Klorenn/ATLAS",
+      "projectSlugs": [
+        "atlas"
+      ],
+      "projectNames": [
+        "ATLAS"
+      ],
+      "language": "JavaScript",
+      "stars": 1,
+      "lastCommitAt": "2026-09-27T20:40:34Z",
+      "sourceType": "curated",
+      "sourceUrl": "https://github.com/Klorenn/ATLAS",
+      "associationEvidence": "curado",
+      "associations": [],
+      "role": null,
+      "observedAt": "2026-09-27"
+    }
+  ],
+  "builders": [
+    {
+      "repo": "klorenn/atlas",
+      "builderName": "Klorenn",
+      "builderLogin": "Klorenn",
+      "builderUrl": "https://github.com/Klorenn",
+      "organization": "Tellus Cooperative",
+      "url": "https://github.com/Klorenn/ATLAS",
+      "sourceUrl": "https://github.com/Klorenn/ATLAS",
+      "observedAt": "2026-09-27",
+      "note": "Owner of the repository. ATLAS is built and maintained by Tellus Cooperative."
+    }
+  ]
+}

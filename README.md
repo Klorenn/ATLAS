@@ -1,6 +1,11 @@
-<img src="assets/readme/atlas-banner.png" alt="ATLAS — an open observatory for the Stellar ecosystem, by Tellus Cooperative" width="100%">
+<img src="assets/readme/atlas-banner.png" alt="ATLAS, an open observatory for the Stellar ecosystem, by Tellus Cooperative" width="100%">
 
 An open observatory for discovering projects and repositories across the Stellar ecosystem.
+
+[![status: live](https://img.shields.io/badge/status-live-3F8487?style=flat-square&labelColor=1F3536)](https://atlastelluscoop.vercel.app/)
+[![catalog: 6,824 repositories](https://img.shields.io/badge/catalog-6%2C824%20repositories-3F8487?style=flat-square&labelColor=1F3536)](web/public/data/catalog.json)
+[![license: MIT](https://img.shields.io/badge/license-MIT-1F3536?style=flat-square&labelColor=1F3536)](LICENSE)
+[![built by Tellus Cooperative](https://img.shields.io/badge/built%20by-Tellus%20Cooperative-ECE0CC?style=flat-square&labelColor=1F3536)](https://telluscoop.org)
 
 **[Open ATLAS →](https://atlastelluscoop.vercel.app/)**
 
@@ -103,7 +108,7 @@ npm run preview
 npm run data
 ```
 
-> `scripts/extract-catalog.mjs` reads the raw dataset from a `data/` directory three levels above `web/`. That dataset lives in the Tellus Cooperative roadmap workspace and is not part of this repository — running `npm run data` outside that workspace will fail. Day-to-day development does not need it: the generated snapshot is already committed.
+> `scripts/extract-catalog.mjs` reads the raw dataset from a `data/` directory three levels above `web/`. That dataset lives in the Tellus Cooperative roadmap workspace and is not part of this repository, so running `npm run data` outside that workspace will fail. Day-to-day development does not need it: the generated snapshot is already committed.
 
 ## Project structure
 
@@ -125,7 +130,7 @@ npm run data
 └── atlas.css
 ```
 
-The files at the root are an earlier vanilla-JS explorer that runs without a bundler — useful for embedding the catalog in a plain HTML page. The React app under `web/` is the primary experience.
+The files at the root are an earlier vanilla-JS explorer that runs without a bundler, useful for embedding the catalog in a plain HTML page. The React app under `web/` is the primary experience.
 
 ## Development
 
@@ -157,4 +162,4 @@ Released under the [MIT License](LICENSE).
 
 ATLAS is an independent community project. It is not affiliated with, or endorsed by, the Stellar Development Foundation.
 
-<img src="assets/readme/atlas-credits.png" alt="ATLAS — a project by Tellus Cooperative, created by Klorenn" width="100%">
+<img src="assets/readme/atlas-credits.png" alt="ATLAS, a project by Tellus Cooperative, created by Klorenn" width="100%">

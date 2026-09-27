@@ -51,7 +51,7 @@ export function CTASection() {
             {/* Description */}
             <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
               Join builders exploring 6,821 repositories across the Stellar
-              ecosystem — with funding history and source evidence on every
+              ecosystem, with funding history and source evidence on every
               record.
             </p>
 

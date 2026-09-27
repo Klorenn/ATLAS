@@ -7,17 +7,17 @@ const GROUPS = [
   {
     title: 'Payments',
     count: 303,
-    items: ['Trustless Work — escrow contracts', 'Stellar MPP SDK — micropayments'],
+    items: ['Trustless Work, escrow contracts', 'Stellar MPP SDK, micropayments'],
   },
   {
     title: 'DeFi',
     count: 214,
-    items: ['Blend — lending protocol', 'Soroswap — AMM core'],
+    items: ['Blend, lending protocol', 'Soroswap, AMM core'],
   },
   {
     title: 'Wallets',
     count: 96,
-    items: ['Freighter — SDF wallet', 'xBull — multichain wallet'],
+    items: ['Freighter, SDF wallet', 'xBull, multichain wallet'],
   },
   {
     title: 'Tooling',
@@ -44,7 +44,7 @@ export default function FeatureExplore() {
         <p className="mt-6 text-teal-deep text-base leading-[1.6] max-w-md">
           Atlas reads every repository, understands what it was built for, and
           routes the noise away from the signal. Focus on what moves your build
-          forward — the rest organizes itself.
+          forward, and the rest organizes itself.
         </p>
         <div className="mt-6 flex flex-wrap gap-2">
           {CHIPS.map((c) => (

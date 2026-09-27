@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Program — Atlas</title>
+<title>Program · Atlas</title>
 <meta name="description" content="Funding program detail across the Stellar ecosystem.">
 <link rel="stylesheet" href="atlas.css">
 </head>
@@ -33,7 +33,7 @@
     sdf: { name: 'SDF Ecosystem Programs', desc: 'Sample data. Source pending.', sample: true },
     hackathon: { name: 'Hackathons', desc: 'Sample data. Source pending.', sample: true },
     community: { name: 'Community initiatives', desc: 'Sample data. Source pending.', sample: true } }[slug] || { name: slug, desc: '', sample: true };
-  document.title = meta.name + ' — Atlas';
+  document.title = meta.name + ' · Atlas';
   document.getElementById('crumb').textContent = meta.name;
   var repos = window.AtlasData.buildRepositories(window.tellusCatalog);
   var inProgram = repos.filter(function (r) { return (r.programs || []).some(function (p) { return p.slug === slug; }); });

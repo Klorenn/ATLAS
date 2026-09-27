@@ -42,6 +42,36 @@ const readJson = async (name) => JSON.parse(await readFile(new URL(name, DATA), 
 const raw = await readFile(new URL('catalog.js', DATA), 'utf8');
 const catalog = JSON.parse(raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
 
+// ATLAS no puede describirse a sí mismo desde `data/`: ese pipeline es externo
+// y regenera catalog.js por completo. Las entradas propias viven en el repo y
+// se reinyectan en cada corrida. Se descartan si la fuente ya las trae.
+const extras = JSON.parse(
+  await readFile(new URL('../data/curated-additions.json', import.meta.url), 'utf8'),
+);
+
+const knownRepos = new Set(
+  (catalog.repositories || []).map((r) => normRepoKey(r.url)).filter(Boolean),
+);
+catalog.repositories = [
+  ...(catalog.repositories || []),
+  ...(extras.repositories || []).filter((r) => !knownRepos.has(normRepoKey(r.url))),
+];
+
+const knownProjects = new Set((catalog.projects || []).map((p) => p.slug));
+catalog.projects = [
+  ...(catalog.projects || []),
+  ...(extras.projects || []).filter((p) => !knownProjects.has(p.slug)),
+];
+
+// El summary viene contado de la fuente, así que queda corto tras el merge.
+if (catalog.summary) {
+  catalog.summary = {
+    ...catalog.summary,
+    projects: catalog.projects.length,
+    repositories: catalog.repositories.length,
+  };
+}
+
 const [events, submissions, curatedBuilders] = await Promise.all([
   readNdjson('hackathon-events.ndjson'),
   readNdjson('hackathon-submissions.ndjson'),
@@ -52,7 +82,10 @@ const [events, submissions, curatedBuilders] = await Promise.all([
 // sobre el owner del repo: una organización no es la persona que escribe el
 // código. `url` null significa que no hay perfil verificado, no que se omita.
 const builderByRepo = new Map(
-  curatedBuilders.map((b) => [String(b.repo || '').toLowerCase(), b]),
+  [...curatedBuilders, ...(extras.builders || [])].map((b) => [
+    String(b.repo || '').toLowerCase(),
+    b,
+  ]),
 );
 
 const eventBySlug = new Map(events.map((e) => [e.slug, e]));
