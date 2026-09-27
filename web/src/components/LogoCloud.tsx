@@ -6,25 +6,34 @@ interface Logo {
   src?: string;
   /** White artwork recolored to ink via CSS for the Sand background. */
   darken?: boolean;
+  /** Rendered height in px. See HEIGHT below for why it is not shared. */
+  height: number;
 }
 
 // Marks live in public/logos, downloaded from official sources:
 // telluscoop.org/brand (Tellus), project GitHub repos (Blend),
 // freighter.app, lobstr.co, stellar.org and cryptocurrency-icons.
 // `darken` recolors white artwork to Teal Ink with brightness(0).
+//
+// HEIGHT: a shared height does not read as a shared size. These marks range
+// from 1:1 icons to a 4.75:1 wordmark, so at one height the wordmarks run four
+// times wider and dominate the row. Each height below is tuned so every mark
+// carries the same optical weight: square icons sit at 32px, wordmarks are cut
+// back until their width lands in the same band. Tellus is deliberately the
+// largest of them — it is the mark of the project that ships this.
 const LOGOS: Logo[] = [
-  { name: 'Tellus Cooperative', src: 'logos/tellus.svg', darken: true },
-  { name: 'Stellar', src: 'logos/stellar.svg', darken: true },
-  { name: 'Freighter', src: 'logos/freighter.svg', darken: true },
-  { name: 'LOBSTR', src: 'logos/lobstr.svg' },
-  { name: 'Blend', src: 'logos/blend.svg' },
+  { name: 'Tellus Cooperative', src: 'logos/tellus.svg', darken: true, height: 36 },
+  { name: 'Stellar', src: 'logos/stellar.svg', darken: true, height: 18 },
+  { name: 'Freighter', src: 'logos/freighter.svg', darken: true, height: 32 },
+  { name: 'LOBSTR', src: 'logos/lobstr.svg', height: 17 },
+  { name: 'Blend', src: 'logos/blend.svg', height: 32 },
 ];
 
 function LogoItem({ logo }: { logo: Logo }) {
   const [failed, setFailed] = useState(false);
   return (
-    // Altura fija para todos los marks: el ancho sigue la relación de aspecto,
-    // así un lockup 4.75:1 y un icono 1:1 comparten la misma altura visual.
+    // Caja de alto fijo: cada mark se centra dentro y aporta su propia altura,
+    // de modo que un lockup 4.75:1 y un icono 1:1 pesan lo mismo en la fila.
     <span className="flex items-center justify-center h-12 px-7 shrink-0">
       {logo.src && !failed ? (
         <img
@@ -32,8 +41,11 @@ function LogoItem({ logo }: { logo: Logo }) {
           alt={logo.name}
           title={logo.name}
           loading="lazy"
-          className="h-8 w-auto max-w-[190px] object-contain opacity-85 hover:opacity-100 transition-opacity"
-          style={logo.darken ? { filter: 'brightness(0)' } : undefined}
+          className="w-auto max-w-[190px] object-contain opacity-85 hover:opacity-100 transition-opacity"
+          style={{
+            height: `${logo.height}px`,
+            ...(logo.darken ? { filter: 'brightness(0)' } : null),
+          }}
           onError={() => setFailed(true)}
         />
       ) : (
