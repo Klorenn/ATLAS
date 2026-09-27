@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://atlastelluscoop.vercel.app/sitemap.xml

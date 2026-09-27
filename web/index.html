@@ -9,14 +9,66 @@
       content="Atlas maps the Stellar ecosystem. Explore open source repositories, understand what they were built for, and discover how they were funded."
     />
     <link rel="canonical" href="https://atlastelluscoop.vercel.app/" />
+    <meta name="author" content="Tellus Cooperative" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ECE0CC" />
+
+    <!-- og:image is the README banner padded to 1200x630. Absolute URLs are
+         required: scrapers do not resolve relative paths. -->
+    <meta property="og:site_name" content="ATLAS" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://atlastelluscoop.vercel.app/" />
     <meta property="og:title" content="Atlas — Explore the Stellar Ecosystem" />
     <meta
       property="og:description"
       content="All Stellar projects, in one place. A living map of repositories, programs and builders."
     />
-    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://atlastelluscoop.vercel.app/og-banner.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta
+      property="og:image:alt"
+      content="ATLAS — an open observatory for the Stellar ecosystem, by Tellus Cooperative"
+    />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Atlas — Explore the Stellar Ecosystem" />
+    <meta
+      name="twitter:description"
+      content="All Stellar projects, in one place. A living map of repositories, programs and builders."
+    />
+    <meta
+      name="twitter:image"
+      content="https://atlastelluscoop.vercel.app/og-banner.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="ATLAS — an open observatory for the Stellar ecosystem, by Tellus Cooperative"
+    />
+
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "ATLAS",
+        "url": "https://atlastelluscoop.vercel.app/",
+        "description": "An open observatory for discovering projects and repositories across the Stellar ecosystem.",
+        "inLanguage": "en",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Tellus Cooperative",
+          "logo": "https://atlastelluscoop.vercel.app/atlas-mark.png"
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
