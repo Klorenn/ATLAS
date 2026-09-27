@@ -1,0 +1,679 @@
+/* Stellar Atlas — explorador como componente.
+ *
+ * Todas las reglas cuelgan de `.sa-root` para que el componente se pueda montar
+ * dentro de otra página (la landing) sin filtrar estilos ni pisar los suyos.
+ * El tema se elige con `data-theme` en el host.
+ */
+
+.sa-root {
+  --sa-bg: #0b0d0e;
+  --sa-surface: #14181a;
+  --sa-surface-2: #1b2023;
+  --sa-line: #2a3134;
+  --sa-text: #e8edee;
+  --sa-muted: #8b979b;
+  --sa-accent: #7fd4c1;
+  --sa-amber: #e0b872;
+  --sa-radius: 10px;
+
+  color: var(--sa-text);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tema claro de marca, para montar sobre la superficie Sand de la landing.
+   Los acentos son los tonos profundos de la paleta para mantener texto AA. */
+.sa-root[data-theme="brand"] {
+  --sa-bg: transparent;
+  --sa-surface: #fbf5e9;
+  --sa-surface-2: rgba(31, 53, 54, 0.05);
+  --sa-line: rgba(31, 53, 54, 0.18);
+  --sa-text: #1f3536;
+  --sa-muted: #4f6a69;
+  --sa-accent: #2a5a5c;
+  --sa-amber: #9e441f;
+}
+
+/* ---------- resumen ---------- */
+
+.sa-root .sa-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1px;
+  margin: 0 0 26px;
+  padding: 0;
+}
+
+.sa-root .sa-stats > div {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-radius);
+  padding: 14px 16px;
+}
+
+.sa-root .sa-stats dt {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  padding: 0;
+  color: var(--sa-text);
+}
+
+.sa-root .sa-stats dd {
+  margin: 4px 0 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+}
+
+/* ---------- controles ---------- */
+
+.sa-root .sa-controls {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 26px;
+}
+
+.sa-root[data-theme="brand"] .sa-controls {
+  background: rgba(251, 245, 233, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.sa-root .sa-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.sa-root .sa-row.sa-views {
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.sa-root .sa-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sa-root .sa-field.sa-grow { flex: 1 1 260px; }
+
+/* El label envuelve a su control, así que el texto y el input se separan con un
+   gap en vez de depender de un `for`. */
+.sa-root .sa-field label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+}
+
+.sa-root input,
+.sa-root select,
+.sa-root button {
+  font: inherit;
+  color: var(--sa-text);
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: 8px;
+  padding: 9px 11px;
+}
+
+.sa-root[data-theme="brand"] input,
+.sa-root[data-theme="brand"] select,
+.sa-root[data-theme="brand"] button {
+  background: #fff;
+}
+
+.sa-root input::placeholder { color: var(--sa-muted); }
+
+.sa-root input:focus-visible,
+.sa-root select:focus-visible,
+.sa-root button:focus-visible,
+.sa-root .sa-card:focus-visible {
+  outline: 2px solid var(--sa-accent);
+  outline-offset: 2px;
+}
+
+.sa-root button { cursor: pointer; }
+.sa-root button:hover { border-color: var(--sa-accent); }
+
+.sa-root .sa-tabs { display: flex; gap: 6px; }
+
+.sa-root .sa-tabs button {
+  background: transparent;
+  border-color: transparent;
+  color: var(--sa-muted);
+  font-weight: 600;
+}
+
+.sa-root[data-theme="brand"] .sa-tabs button[aria-selected="true"] { background: #fff; }
+
+.sa-root .sa-tabs button[aria-selected="true"] {
+  background: var(--sa-surface-2);
+  border-color: var(--sa-line);
+  color: var(--sa-text);
+}
+
+.sa-root .sa-lang button {
+  min-width: 44px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.sa-root .sa-count {
+  margin: 0;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--sa-muted);
+}
+
+/* Resumen alternativo en la ficha: se muestra atenuado como segunda lengua. */
+.sa-root .sa-alt {
+  font-size: 13px;
+  opacity: 0.85;
+  border-left: 2px solid var(--sa-line);
+  padding-left: 10px;
+}
+
+/* ---------- estado de carga ---------- */
+
+.sa-root .sa-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 56px 0;
+  color: var(--sa-muted);
+  font-size: 14px;
+}
+
+.sa-root .sa-loading::before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  border: 2px solid var(--sa-line);
+  border-top-color: var(--sa-accent);
+  border-radius: 50%;
+  animation: sa-spin 0.7s linear infinite;
+}
+
+@keyframes sa-spin { to { transform: rotate(1turn); } }
+
+.sa-root .sa-fallback {
+  margin: 0;
+  padding: 22px;
+  border: 1px solid var(--sa-line);
+  border-radius: 12px;
+  color: var(--sa-muted);
+  font-size: 14px;
+}
+
+/* ---------- tarjetas ---------- */
+
+/* min() en el mínimo evita que el track de 288px sea más ancho que su contenedor
+   en pantallas angostas: sin eso la tarjeta se sale por la derecha y el padding
+   lateral queda asimétrico. */
+.sa-root .sa-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(288px, 100%), 1fr));
+  gap: 14px;
+  padding-bottom: 26px;
+}
+
+.sa-root .sa-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-radius);
+  padding: 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.sa-root .sa-card:hover {
+  border-color: var(--sa-accent);
+  transform: translateY(-2px);
+}
+
+.sa-root .sa-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.sa-root .sa-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.sa-root .sa-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--sa-accent);
+  background: color-mix(in srgb, var(--sa-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sa-accent) 28%, transparent);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.sa-root .sa-status {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--sa-amber);
+  text-transform: uppercase;
+}
+
+.sa-root .sa-status.sa-unknown { color: var(--sa-muted); }
+
+.sa-root .sa-card h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--sa-text);
+}
+
+.sa-root .sa-card h3.sa-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.sa-root .sa-card p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--sa-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sa-root .sa-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.sa-root .sa-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--sa-line);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--sa-muted);
+  white-space: nowrap;
+}
+
+.sa-root .sa-badge.sa-type {
+  color: var(--sa-accent);
+  border-color: color-mix(in srgb, var(--sa-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--sa-accent) 10%, transparent);
+}
+
+.sa-root .sa-badge.sa-curado {
+  color: var(--sa-accent);
+  border-color: color-mix(in srgb, var(--sa-accent) 40%, transparent);
+}
+
+.sa-root .sa-fund {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sa-amber);
+  border: 1px solid color-mix(in srgb, var(--sa-amber) 40%, transparent);
+  background: color-mix(in srgb, var(--sa-amber) 12%, transparent);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.sa-root .sa-card-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--sa-muted);
+  border-top: 1px solid var(--sa-line);
+  padding-top: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-root .sa-empty {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--sa-muted);
+}
+
+.sa-root .sa-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 48px;
+}
+
+/* ---------- paginación ---------- */
+
+.sa-root .sa-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-bottom: 48px;
+}
+
+.sa-root .sa-page-nums { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.sa-root .sa-page-nums button[disabled] {
+  background: var(--sa-surface-2);
+  border-color: var(--sa-line);
+  color: var(--sa-text);
+  cursor: default;
+}
+
+.sa-root .sa-page-info {
+  margin: 0;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--sa-muted);
+  flex-basis: 100%;
+  text-align: center;
+}
+
+.sa-root button:disabled { opacity: 0.45; cursor: default; }
+.sa-root button:disabled:hover { border-color: var(--sa-line); }
+
+/* ---------- ficha (dialog) ---------- */
+
+.sa-root .sa-dialog {
+  width: min(620px, 92vw);
+  max-height: 88vh;
+  border: 1px solid var(--sa-line);
+  border-radius: 14px;
+  background: var(--sa-surface);
+  color: var(--sa-text);
+  padding: 0;
+}
+
+.sa-root .sa-dialog::backdrop { background: rgb(0 0 0 / 0.62); }
+
+.sa-root .sa-sheet { padding: 22px; }
+
+.sa-root .sa-sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid var(--sa-line);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.sa-root .sa-sheet-head h2 {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  color: var(--sa-text);
+  font-weight: 600;
+}
+
+.sa-root .sa-close {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  padding: 0 6px;
+  color: var(--sa-muted);
+}
+
+.sa-root .sa-prose {
+  margin: 0 0 16px;
+  color: var(--sa-muted);
+  font-size: 15px;
+}
+
+.sa-root .sa-warn {
+  margin: 14px 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--sa-amber);
+  background: color-mix(in srgb, var(--sa-amber) 10%, transparent);
+  color: var(--sa-text);
+  font-size: 13px;
+  border-radius: 0 6px 6px 0;
+}
+
+.sa-root .sa-ev {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+  border: 1px solid var(--sa-line);
+  border-radius: 999px;
+  padding: 1px 7px;
+  margin-left: 6px;
+  white-space: nowrap;
+}
+
+.sa-root .sa-dialog dl {
+  display: grid;
+  grid-template-columns: minmax(120px, auto) 1fr;
+  gap: 8px 18px;
+  margin: 0;
+}
+
+.sa-root .sa-dialog dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+  padding-top: 2px;
+}
+
+.sa-root .sa-dialog dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--sa-text);
+}
+
+.sa-root .sa-dialog h4 {
+  margin: 20px 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+}
+
+.sa-root .sa-link-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.sa-root .sa-link-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.sa-root .sa-dialog a { color: var(--sa-accent); }
+
+.sa-root .sa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.sa-root .sa-table th,
+.sa-root .sa-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-root .sa-table th {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sa-muted);
+  font-weight: 700;
+}
+
+.sa-root .sa-table .sa-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-root .sa-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ---------- doc de repositorio (formato API) ---------- */
+
+.sa-root .sa-doc-route {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 7px 12px;
+  border: 1px solid var(--sa-line);
+  border-radius: 8px;
+  background: var(--sa-surface-2);
+  color: var(--sa-muted);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.sa-root .sa-doc-route .sa-mono { color: var(--sa-accent); }
+
+.sa-root .sa-doc td.sa-type {
+  color: var(--sa-muted);
+  white-space: nowrap;
+}
+
+.sa-root .sa-doc td.sa-mono { white-space: nowrap; }
+
+.sa-root .sa-nil {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--sa-surface-2);
+  color: var(--sa-muted);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+/* El nombre del repo abre su ficha; GitHub sigue siendo un enlace aparte. */
+.sa-root .sa-repo-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sa-accent);
+  font: inherit;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.sa-root .sa-repo-link:hover { text-decoration-thickness: 2px; }
+.sa-root .sa-repo-link:focus-visible {
+  outline: 2px solid var(--sa-accent);
+  outline-offset: 2px;
+}
+
+.sa-root .sa-footer {
+  border-top: 1px solid var(--sa-line);
+  padding: 20px 0 8px;
+  color: var(--sa-muted);
+  font-size: 13px;
+}
+
+.sa-root .sa-footer a { color: var(--sa-accent); }
+
+.sa-root .sa-code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+}
+
+.sa-root [hidden] { display: none !important; }
+
+/* ---------- movimiento profesional ---------- */
+
+@keyframes sa-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.99); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes sa-sheet-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Entrada escalonada solo para la primera tanda visible: evita animar 60
+   tarjetas en cada paginación y mantiene el primer pintado fluido. */
+.sa-root .sa-grid .sa-card {
+  animation: sa-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 180px;
+}
+
+.sa-root .sa-grid .sa-card:nth-child(1) { animation-delay: 0.02s; }
+.sa-root .sa-grid .sa-card:nth-child(2) { animation-delay: 0.06s; }
+.sa-root .sa-grid .sa-card:nth-child(3) { animation-delay: 0.1s; }
+.sa-root .sa-grid .sa-card:nth-child(4) { animation-delay: 0.14s; }
+.sa-root .sa-grid .sa-card:nth-child(5) { animation-delay: 0.18s; }
+.sa-root .sa-grid .sa-card:nth-child(6) { animation-delay: 0.22s; }
+.sa-root .sa-grid .sa-card:nth-child(7) { animation-delay: 0.26s; }
+.sa-root .sa-grid .sa-card:nth-child(8) { animation-delay: 0.3s; }
+.sa-root .sa-grid .sa-card:nth-child(n+9) { animation-delay: 0s; }
+
+/* Elevación profesional sin Layout thrash: solo transform y sombra. */
+.sa-root .sa-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -18px rgba(0, 0, 0, 0.55);
+}
+
+.sa-root .sa-dialog[open] .sa-sheet { animation: sa-sheet-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sa-root * { transition: none !important; }
+  .sa-root .sa-loading::before { animation: none; }
+  .sa-root .sa-grid .sa-card { animation: none; }
+  .sa-root .sa-dialog[open] .sa-sheet { animation: none; }
+}

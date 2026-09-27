@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn tokens mapped to the Tellus Sand system (telluscoop.org/brand).
+       Body text stays Teal Ink on Sand (10.1:1, AAA). Accent text uses
+       Clay Deep (4.9:1, AA) — never Clay/Teal for small text. */
+    --background: 42 38% 86%;
+    --foreground: 184 27% 17%;
+    --card: 42 38% 86%;
+    --card-foreground: 184 27% 17%;
+    --muted: 42 30% 80%;
+    --muted-foreground: 183 26% 27%;
+    --primary: 17 66% 32%;
+    --primary-foreground: 42 38% 86%;
+    --border: 40 18% 62%;
+    --radius: 0.75rem;
+  }
+}
+
+html,
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #ece0cc;
+  color: #1f3536;
+}
+
+::selection {
+  background: rgba(199, 90, 42, 0.25);
+}
+
+/* Shiny gradient headline animation */
+@keyframes shiny {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.animate-shiny {
+  animation: shiny 6s linear infinite;
+}
+
+/* Logo marquee */
+@keyframes logo-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-logo-marquee {
+  animation: logo-marquee 32s linear infinite;
+}
+
+.marquee-pause:hover .animate-logo-marquee {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-logo-marquee {
+    animation: none;
+  }
+}
+
+/* Liquid-glass card treatment — light Sand variant.
+   Dark hairline gradient borders, soft paper shadow. */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.55);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: none;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.9),
+    0 12px 32px -16px rgba(31, 53, 54, 0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(31, 53, 54, 0.35) 0%,
+    rgba(31, 53, 54, 0.12) 20%,
+    rgba(31, 53, 54, 0) 40%,
+    rgba(31, 53, 54, 0) 60%,
+    rgba(31, 53, 54, 0.12) 80%,
+    rgba(31, 53, 54, 0.35) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+

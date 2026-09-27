@@ -1,0 +1,60 @@
+name: Bug report
+description: Report something that does not work as expected
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What is wrong? One or two sentences.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The exact sequence that triggers the problem. Include the URL if filters or a repository detail are involved.
+      placeholder: |
+        1. Open http://localhost:3002
+        2. Search for "..."
+        3. Select the "Wallets" category
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: What happened instead. Paste any console error verbatim.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        - OS: macOS 15.1
+        - Browser: Chrome 130
+        - Node: 20.18.0
+        - npm: 10.8.2
+        - Running: npm run dev / npm run preview / deployed build
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Screenshots, recordings, or a note if this is a data problem rather than a code problem.
+    validations:
+      required: false

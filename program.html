@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program — Atlas</title>
+<meta name="description" content="Funding program detail across the Stellar ecosystem.">
+<link rel="stylesheet" href="atlas.css">
+</head>
+<body>
+<a class="skip" href="#detail">Skip to program</a>
+<header class="navbar"><div class="navbar-inner">
+<a class="brand" href="index.html"><span class="brand-name">ATLAS</span><span class="brand-sub">by Tellus Cooperative</span></a>
+<nav class="nav-links" aria-label="Primary"><a href="index.html#explore">Explore</a><a href="index.html#programs">Programs</a><a href="index.html#ecosystem">Ecosystem</a><a href="index.html#about">About</a></nav>
+<a class="btn nav-cta" href="index.html#explore">Browse repositories ↗</a>
+</div></header>
+<main class="wrap-wide" id="detail">
+  <p class="breadcrumb"><a href="index.html#programs">Programs</a> / <span id="crumb">…</span></p>
+  <div id="content"></div>
+  <h2 style="font-size:22px;margin-top:32px">Repositories in this program</h2>
+  <div id="program-explorer"></div>
+</main>
+<footer class="footer"><div class="wrap-wide"><div class="footer-bottom"><span>Built by Tellus Cooperative.</span><span><a href="index.html#explore">Back to explore</a></span></div></div></footer>
+<script src="../data/catalog.js"></script>
+<script src="atlas-data.js"></script>
+<script src="atlas-explorer.js"></script>
+<script>
+(function () {
+  function esc(s) { return String(s == null ? '' : s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
+  var slug = new URLSearchParams(location.search).get('slug') || 'scf';
+  var meta = { scf: { name: 'Stellar Community Fund', desc: 'Grant rounds with on-record evidence in the catalog.', sample: false },
+    instawards: { name: 'InstaWards', desc: 'Sample data. Source pending.', sample: true },
+    sdf: { name: 'SDF Ecosystem Programs', desc: 'Sample data. Source pending.', sample: true },
+    hackathon: { name: 'Hackathons', desc: 'Sample data. Source pending.', sample: true },
+    community: { name: 'Community initiatives', desc: 'Sample data. Source pending.', sample: true } }[slug] || { name: slug, desc: '', sample: true };
+  document.title = meta.name + ' — Atlas';
+  document.getElementById('crumb').textContent = meta.name;
+  var repos = window.AtlasData.buildRepositories(window.tellusCatalog);
+  var inProgram = repos.filter(function (r) { return (r.programs || []).some(function (p) { return p.slug === slug; }); });
+  document.getElementById('content').innerHTML =
+    '<p class="section-label">[ Program ]</p><h1 style="margin:0 0 10px;font-size:clamp(32px,4vw,48px);letter-spacing:-0.02em">' + esc(meta.name) + '</h1>' +
+    '<p style="color:var(--muted);max-width:64ch">' + esc(meta.desc) + '</p>' +
+    '<div class="hero-stats" style="margin-top:18px"><div class="hstat"><b>' + inProgram.length.toLocaleString('en-US') + '</b><span>Repositories</span></div>' +
+    '<div class="hstat"><b>' + (meta.sample ? 'Sample' : 'Live') + '</b><span>Data status</span></div></div>' +
+    (meta.sample ? '<p style="font-size:13px;color:var(--muted)">Sample program. Counts are demonstrative until a conclusive source is confirmed.</p>' : '');
+  if (slug === 'scf' && window.AtlasExplorer) {
+    history.replaceState(null, '', 'program.html?slug=scf&program=scf');
+    window.AtlasExplorer.mount(document.getElementById('program-explorer'));
+  } else {
+    document.getElementById('program-explorer').innerHTML = '<div class="empty"><h3>Sample program.</h3><p>No conclusive source in the current catalog. SCF works today; other programs are placeholders.</p><p><a class="btn btn-secondary" href="program.html?slug=scf">View SCF</a></p></div>';
+  }
+})();
+</script>
+</body>
+</html>

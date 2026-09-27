@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atlas — Explore the Stellar Ecosystem</title>
+<meta name="description" content="Discover repositories, projects, builders and funding programs across the Stellar ecosystem.">
+<link rel="canonical" href="https://telluscoop.org/atlas/">
+<meta property="og:title" content="Atlas — Explore the Stellar Ecosystem">
+<meta property="og:description" content="Discover repositories, projects, builders and funding programs across the Stellar ecosystem.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' fill='none' stroke='%23111' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23111'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="atlas.css">
+</head>
+<body>
+<a class="skip" href="#explore">Skip to explorer</a>
+
+<header class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="index.html" aria-label="Atlas home">
+      <span class="brand-name">ATLAS</span>
+      <span class="brand-sub">by Tellus Cooperative</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#explore">Explore</a>
+      <a href="#programs">Programs</a>
+      <a href="#ecosystem">Ecosystem</a>
+      <a href="#about">About</a>
+    </nav>
+    <a class="btn nav-cta" href="#explore">Browse repositories <span class="arrow" aria-hidden="true">↗</span></a>
+    <button class="burger" id="nav-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile" hidden>
+    <a href="#explore">Explore</a>
+    <a href="#programs">Programs</a>
+    <a href="#ecosystem">Ecosystem</a>
+    <a href="#about">About</a>
+    <a class="btn" href="#explore">Browse repositories ↗</a>
+  </nav>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero-grid">
+    <div>
+      <p class="eyebrow">[ Stellar Ecosystem ]</p>
+      <h1 id="hero-title">All Stellar projects, in one place.</h1>
+      <p class="lede">Atlas maps the Stellar ecosystem. Explore open source repositories, understand what they were built for, and discover how they were funded.</p>
+      <div class="hero-ctas">
+        <a class="btn" href="#explore">Explore repositories <span class="arrow" aria-hidden="true">↗</span></a>
+        <a class="btn btn-secondary" href="#about">Learn more</a>
+      </div>
+      <div class="hero-stats" aria-label="Ecosystem stats">
+        <div class="hstat"><b id="stat-repos" data-count="2098">2,098</b><span>Repositories</span></div>
+        <div class="hstat"><b id="stat-programs" data-count="15">15</b><span>Funding programs</span></div>
+        <div class="hstat"><b>Global</b><span>Builder ecosystem</span></div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img class="main" src="assets/ChatGPT%20Image%20Sep%2027,%202026,%2011_09_19%20AM-1.png" alt="Editorial illustration of a developer working late on a laptop, halftone style" loading="eager" decoding="async">
+      <div class="mini-panel panel-repos" aria-hidden="true">
+        <h4>Repositories</h4>
+        <ul>
+          <li><span>stellar-paylink</span><span class="tag">SCF</span></li>
+          <li><span>dob-protocol</span><span class="tag">SAMPLE</span></li>
+          <li><span>paltalabs</span><span class="tag">SDF</span></li>
+          <li><span>litemint</span><span class="tag">COMMUNITY</span></li>
+          <li><span>raven-stellar</span><span class="tag">SCF</span></li>
+        </ul>
+      </div>
+      <div class="mini-panel panel-funding" aria-hidden="true">
+        <h4>Funding</h4>
+        <ul>
+          <li><span>Stellar Community Fund</span></li>
+          <li><span>InstaWards *</span></li>
+          <li><span>Ecosystem Fund *</span></li>
+          <li><span>Community *</span></li>
+        </ul>
+      </div>
+      <span class="editorial-note" style="top:-6px;right:12px" aria-hidden="true">fig. 01 — night build</span>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE -->
+<section class="section" id="explore" aria-labelledby="explore-title">
+  <div class="wrap-wide">
+    <p class="section-label reveal">[ Explore the ecosystem ]</p>
+    <h2 id="explore-title" class="reveal">Explore the Stellar ecosystem.</h2>
+    <p class="support reveal">Search repositories, builders and projects across the ecosystem.</p>
+    <div id="atlas-explorer" class="reveal"></div>
+    <p style="font-size:12px;color:var(--muted)">* InstaWards, SDF programs, hackathon and community entries are sample data until a conclusive source is confirmed. SCF data carries source evidence in each record.</p>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="section" id="programs" aria-labelledby="programs-title">
+  <div class="wrap-wide">
+    <p class="section-label reveal">[ Programs ]</p>
+    <h2 id="programs-title" class="reveal">Where projects get their start.</h2>
+    <p class="support reveal">Funding programs, awards and community initiatives. Select a program to see its repositories.</p>
+    <div class="program-grid reveal" id="program-grid"></div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section class="section" id="ecosystem" aria-labelledby="eco-title">
+  <div class="wrap-wide">
+    <p class="section-label reveal">[ Ecosystem ]</p>
+    <h2 id="eco-title" class="reveal">A living map of Stellar.</h2>
+    <p class="support reveal">Browse by category. Counts come from the live catalog.</p>
+    <div class="cat-grid reveal" id="cat-grid"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" aria-label="What Atlas does">
+  <div class="wrap-wide">
+    <div class="feature-strip reveal">
+      <div class="feature"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><h3>Discover</h3><p>Browse open source repositories built across Stellar.</p></div>
+      <div class="feature"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg><h3>Understand</h3><p>See what projects build and which programs supported them.</p></div>
+      <div class="feature"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3 3 0 0 1 0 7M21 20c0-2.6-1.6-4.8-4-5.7"/></svg><h3>Connect</h3><p>Find builders, teams and opportunities to collaborate.</p></div>
+      <div class="feature"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M9 4 4 6v14l5-2 6 2 5-2V4l-5 2-6-2Z"/><path d="M9 4v14M15 6v14"/></svg><h3>Navigate</h3><p>A living map of the Stellar ecosystem curated by Tellus Cooperative.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about" aria-labelledby="about-title">
+  <div class="wrap-wide">
+    <div class="about-grid">
+      <div>
+        <p class="section-label reveal">[ Why Atlas ]</p>
+        <h2 id="about-title" class="reveal">Open ecosystems need better maps.</h2>
+        <p class="reveal" style="color:var(--muted)">Open source ecosystems grow quickly. Projects appear across GitHub, grants, hackathons and community programs.</p>
+        <p class="reveal" style="color:var(--muted)">Atlas brings that information together into one navigable place — with source evidence on every record and no invented numbers.</p>
+        <p class="reveal"><a class="btn btn-secondary" href="#explore">Start exploring ↗</a></p>
+      </div>
+      <div class="reveal">
+        <img src="assets/ChatGPT%20Image%20Sep%2027,%202026,%2011_09_20%20AM-2.png" alt="Editorial halftone illustration of archive books and catalog drawers" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap-wide">
+    <div class="footer-grid">
+      <div>
+        <p class="brand-name">ATLAS</p>
+        <p style="color:var(--muted);font-size:14px;max-width:32ch">A living map of the Stellar ecosystem.<br>by Tellus Cooperative</p>
+      </div>
+      <nav aria-label="Explore"><h3>Explore</h3><ul><li><a href="#explore">Repositories</a></li><li><a href="#programs">Programs</a></li><li><a href="#about">About</a></li><li><a href="https://github.com/tellus-cooperative" rel="noopener">GitHub</a></li></ul></nav>
+      <nav aria-label="Programs"><h3>Programs</h3><ul><li><a href="program.html?slug=scf">Stellar Community Fund</a></li><li><a href="program.html?slug=instawards">InstaWards</a></li><li><a href="program.html?slug=hackathon">Hackathons</a></li></ul></nav>
+      <nav aria-label="Social"><h3>Connect</h3><ul><li><a href="https://x.com/" rel="noopener">X</a></li><li><a href="https://www.linkedin.com/" rel="noopener">LinkedIn</a></li><li><a href="mailto:hola@telluscoop.org">Contact</a></li></ul></nav>
+    </div>
+    <div class="footer-bottom"><span>Built by Tellus Cooperative.</span><span>Source evidence on every record · observedAt visible in catalog.</span></div>
+  </div>
+</footer>
+
+<!-- Command palette -->
+<div class="cmd-backdrop" id="cmd-backdrop" hidden>
+  <div class="cmd-box" role="dialog" aria-modal="true" aria-label="Search Atlas">
+    <input id="cmd-input" type="text" placeholder="Search Atlas — projects, repositories, programs..." aria-label="Search Atlas" autocomplete="off">
+    <div class="cmd-list" id="cmd-list" role="listbox" aria-label="Results"></div>
+  </div>
+</div>
+
+<!-- Mobile filter drawer -->
+<div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+<div class="drawer" id="filter-drawer" role="dialog" aria-modal="true" aria-label="Filters" hidden></div>
+
+<script src="../data/catalog.js"></script>
+<script src="atlas-data.js"></script>
+<script src="atlas-explorer.js"></script>
+<script src="atlas-app.js"></script>
+<script>
+(function bootAtlas() {
+  function renderProgramsCats() {
+    var catalog = window.tellusCatalog; if (!catalog) return;
+    var repos = window.AtlasData ? window.AtlasData.buildRepositories(catalog) : [];
+    var programs = [
+      { slug: 'scf', name: 'Stellar Community Fund', desc: 'Grant rounds with on-record evidence.', count: catalog.summary.fundedProjects + ' projects' },
+      { slug: 'instawards', name: 'InstaWards', desc: 'Sample data. Source pending.', count: 'Sample' },
+      { slug: 'hackathon', name: 'Hackathons', desc: 'Sample data. Source pending.', count: 'Sample' },
+      { slug: 'sdf', name: 'SDF Ecosystem Programs', desc: 'Sample data. Source pending.', count: 'Sample' },
+      { slug: 'community', name: 'Community initiatives', desc: 'Sample data. Source pending.', count: 'Sample' }
+    ];
+    document.getElementById('program-grid').innerHTML = programs.map(function (p) {
+      return '<a class="program-card" href="program.html?slug=' + p.slug + '"><h3>' + p.name + '</h3><p>' + p.desc + '</p><span class="badge">' + p.count + '</span></a>';
+    }).join('');
+    var byCat = {};
+    repos.forEach(function (r) { (r.category || []).forEach(function (c) { byCat[c] = (byCat[c] || 0) + 1; }); });
+    var order = window.AtlasData.CATEGORY_ORDER.filter(function (c) { return byCat[c]; });
+    document.getElementById('cat-grid').innerHTML = order.map(function (c) {
+      return '<a class="cat-cell" href="index.html?category=' + encodeURIComponent(c) + '#explore"><b>' + c + '</b><span>' + byCat[c].toLocaleString('en-US') + ' repositories</span></a>';
+    }).join('');
+  }
+  function applyDeepLink() {
+    var p = new URLSearchParams(location.search);
+    if (p.get('category')) {
+      var ex = document.getElementById('atlas-explorer');
+      if (ex) setTimeout(function () { document.getElementById('explore').scrollIntoView({ behavior: 'smooth' }); }, 400);
+    }
+  }
+  window.addEventListener('DOMContentLoaded', function () {
+    renderProgramsCats();
+    var host = document.getElementById('atlas-explorer');
+    if (window.AtlasExplorer) window.AtlasExplorer.mount(host);
+    applyDeepLink();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repository — Atlas</title>
+<meta name="description" content="Repository detail across the Stellar ecosystem.">
+<link rel="stylesheet" href="atlas.css">
+</head>
+<body>
+<a class="skip" href="#detail">Skip to detail</a>
+<header class="navbar"><div class="navbar-inner">
+<a class="brand" href="index.html"><span class="brand-name">ATLAS</span><span class="brand-sub">by Tellus Cooperative</span></a>
+<nav class="nav-links" aria-label="Primary"><a href="index.html#explore">Explore</a><a href="index.html#programs">Programs</a><a href="index.html#ecosystem">Ecosystem</a><a href="index.html#about">About</a></nav>
+<a class="btn nav-cta" href="index.html#explore">Browse repositories ↗</a>
+</div></header>
+<main class="wrap" id="detail">
+  <p class="breadcrumb"><a href="index.html#explore">Explore</a> / <span id="crumb">…</span></p>
+  <div id="content"><div class="skeleton-row"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
+</main>
+<footer class="footer"><div class="wrap"><div class="footer-bottom"><span>Built by Tellus Cooperative.</span><span><a href="index.html#explore">Back to explore</a></span></div></div></footer>
+<script src="../data/catalog.js"></script>
+<script src="atlas-data.js"></script>
+<script>
+(function () {
+  function esc(s) { return String(s == null ? '' : s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;'); }
+  var slug = new URLSearchParams(location.search).get('slug');
+  var catalog = window.tellusCatalog;
+  var box = document.getElementById('content');
+  if (!catalog || !slug) { box.innerHTML = '<div class="empty"><h3>Repository not found.</h3><p><a href="index.html#explore">Back to explore</a></p></div>'; return; }
+  var repos = window.AtlasData.buildRepositories(catalog);
+  var r = repos.filter(function (x) { return x.slug === slug; })[0];
+  if (!r) { box.innerHTML = '<div class="empty"><h3>Repository not found.</h3><p>Try changing your search.</p><p><a class="btn btn-secondary" href="index.html#explore">Clear filters</a></p></div>'; return; }
+  document.title = r.name + ' — Atlas';
+  document.getElementById('crumb').textContent = r.name;
+  var gh = r.repositoryUrl;
+  var info = [
+    ['Category', (r.category || []).join(', ')], ['Language', r.primaryLanguage || '—'],
+    ['Status', r.status], ['License', r.license || '—'],
+    ['Stars', r.stars == null ? '—' : r.stars], ['Forks', r.forks == null ? '—' : r.forks],
+    ['Last update', window.AtlasData.timeAgo(r.updatedAt)], ['Observed', r.observedAt || '—']
+  ].map(function (row) { return '<div class="info-cell"><dt>' + row[0] + '</dt><dd>' + esc(row[1]) + '</dd></div>'; }).join('');
+  var funding = (r.fundingHistory || []).length
+    ? '<ul class="timeline">' + r.fundingHistory.map(function (f) {
+        return '<li><span class="year">' + esc(f.year || '—') + '</span><b>' + esc(f.program) + '</b><span>' + esc(f.result || '') + (f.amount != null ? ' · $' + Number(f.amount).toLocaleString('en-US') : '') + '</span></li>';
+      }).join('') + '</ul>'
+    : '<p style="color:var(--muted)">No funding history on record. A missing entry means the source does not publish it.</p>';
+  var builders = r.organization
+    ? '<div class="builder-row"><span class="avatar">' + esc(r.organization.name.slice(0, 1).toUpperCase()) + '</span><span><b>' + esc(r.organization.name) + '</b><br><span style="color:var(--muted);font-size:13px">Organization · <a href="' + esc(r.organization.url) + '" rel="noopener">GitHub</a></span></span></div>'
+    : '<p style="color:var(--muted)">No builder identity on record.</p>';
+  var tech = (r.technologies || []).length ? '<div class="tag-list">' + r.technologies.map(function (t) { return '<span class="badge">' + esc(t) + '</span>'; }).join('') + '</div>' : '<p style="color:var(--muted)">—</p>';
+  var related = repos.filter(function (x) {
+    return x.slug !== r.slug && ((x.category || []).some(function (c) { return (r.category || []).indexOf(c) !== -1; }) || (x.organization && r.organization && x.organization.name === r.organization.name));
+  }).slice(0, 4).map(function (x) {
+    return '<a href="repository.html?slug=' + encodeURIComponent(x.slug) + '"><b>' + esc(x.name) + '</b><span>' + esc((x.description || '').slice(0, 90)) + '</span></a>';
+  }).join('');
+  box.innerHTML =
+    '<div class="detail-head"><div><h1>' + esc(r.name) + '</h1><p class="desc">' + esc(r.description || 'No description on record.') + '</p>' +
+    (r.projectName ? '<p style="color:var(--muted);font-size:14px">Project: ' + esc(r.projectName) + (r.evidence ? ' · evidence: ' + esc(r.evidence) : '') + '</p>' : '') +
+    '</div><div class="detail-ctas"><a class="btn" href="' + esc(gh) + '" rel="noopener">View repository ↗</a>' +
+    (r.websiteUrl ? '<a class="btn btn-secondary" href="' + esc(r.websiteUrl) + '" rel="noopener">Visit website ↗</a>' : '') + '</div></div>' +
+    '<dl class="info-grid">' + info + '</dl>' +
+    '<h2 style="font-size:22px">Funding &amp; programs</h2>' + funding +
+    '<h2 style="font-size:22px">About the project</h2><p style="color:var(--muted);max-width:68ch">' + esc(r.longDescription || r.description || 'No long description on record.') + '</p>' +
+    '<h3 style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">What it does</h3><p style="max-width:68ch">' + esc(r.description || '—') + '</p>' +
+    '<h3 style="font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Technology</h3>' + tech +
+    '<h2 style="font-size:22px;margin-top:28px">Builders</h2>' + builders +
+    '<h2 style="font-size:22px;margin-top:28px">Related repositories</h2><div class="related">' + (related || '<p style="color:var(--muted)">—</p>') + '</div>';
+})();
+</script>
+</body>
+</html>

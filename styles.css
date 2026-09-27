@@ -1,0 +1,106 @@
+/* Stellar Atlas (página suelta) — solo la envolvente.
+ *
+ * El explorador vive en explorer.css como componente scopeado bajo `.sa-root`,
+ * para poder montarlo también dentro de la landing sin duplicar reglas.
+ */
+
+:root {
+  --bg: #0b0d0e;
+  --surface: #14181a;
+  --line: #2a3134;
+  --text: #e8edee;
+  --muted: #8b979b;
+  --accent: #7fd4c1;
+  --wrap: 1180px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f8f8;
+    --surface: #ffffff;
+    --line: #dfe3e4;
+    --text: #14191b;
+    --muted: #5f6b6f;
+    --accent: #1c7a68;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 20px; }
+
+.skip {
+  position: absolute;
+  left: -9999px;
+}
+
+.skip:focus {
+  left: 20px;
+  top: 12px;
+  z-index: 10;
+  background: var(--accent);
+  color: #06231e;
+  padding: 8px 14px;
+  border-radius: 6px;
+}
+
+/* ---------- cabecera ---------- */
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  padding: 52px 0 36px;
+  background: linear-gradient(180deg, var(--surface), transparent);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.site-header h1 {
+  margin: 0 0 14px;
+  font-size: clamp(28px, 4.6vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+
+.lede {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--muted);
+}
+
+/* ---------- pie ---------- */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 26px 0 40px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+a { color: var(--accent); }
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+}
+
+main.wrap { padding-bottom: 24px; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
