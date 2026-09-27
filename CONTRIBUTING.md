@@ -22,6 +22,8 @@ npm run dev
 
 Requires Node.js `^18.0.0 || >=20.0.0` and npm. No environment variables are needed — the catalog snapshot in `web/public/data/catalog.json` is committed.
 
+`@supabase/supabase-js` is installed but not imported anywhere yet. It is reserved for a planned edge function that will refresh the catalog automatically. Leave it in `package.json`.
+
 The React app under `web/` is the primary experience. The files at the repository root are the standalone vanilla explorer and need no build step.
 
 ## Working on a change

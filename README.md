@@ -2,7 +2,7 @@
 
 An open observatory for discovering projects and repositories across the Stellar ecosystem.
 
-[Overview](#overview) · [Explore the ecosystem](#explore-the-ecosystem) · [How it works](#how-it-works) · [Tech stack](#tech-stack) · [Getting started](#getting-started) · [Project structure](#project-structure) · [Development](#development) · [Contributing](#contributing) · [Credits](#credits)
+[Overview](#overview) · [Explore the ecosystem](#explore-the-ecosystem) · [How it works](#how-it-works) · [Tech stack](#tech-stack) · [Getting started](#getting-started) · [Project structure](#project-structure) · [Development](#development) · [Contributing](#contributing) · [License](#license) · [Credits](#credits)
 
 ## Overview
 
@@ -141,6 +141,10 @@ There is no linter, formatter or test suite configured in this repository yet. `
 Bug reports, ideas and code are welcome. Open an issue using the bug report or feature request template, or send a pull request.
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full workflow.
+
+## License
+
+Released under the [MIT License](LICENSE).
 
 ## Credits
 
