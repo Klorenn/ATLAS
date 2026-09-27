@@ -2,6 +2,8 @@
 
 An open observatory for discovering projects and repositories across the Stellar ecosystem.
 
+**[Open ATLAS →](https://atlastelluscoop.vercel.app/)**
+
 [Overview](#overview) · [Explore the ecosystem](#explore-the-ecosystem) · [How it works](#how-it-works) · [Tech stack](#tech-stack) · [Getting started](#getting-started) · [Project structure](#project-structure) · [Development](#development) · [Contributing](#contributing) · [License](#license) · [Credits](#credits)
 
 ## Overview
