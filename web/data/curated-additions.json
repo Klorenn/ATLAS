@@ -1,5 +1,5 @@
 {
-  "_comment": "Entries that the upstream pipeline in data/ does not produce, because they describe ATLAS itself. Merged by scripts/extract-catalog.mjs on every run, so they survive a regeneration of data/catalog.js. Same shape as that file. Every value here is observed, not estimated.",
+  "_comment": "Entries that the upstream pipeline in data/ does not produce, because they describe ATLAS itself, and curated enrichments (curatedPrograms, curatedCountries, curatedCategory, note) applied additively to repositories the source already provides. Merged by scripts/extract-catalog.mjs on every run, so they survive a regeneration of data/catalog.js. Same shape as that file. Every value here is observed, not estimated.",
   "projects": [
     {
       "slug": "atlas",
@@ -36,6 +36,14 @@
       "associations": [],
       "role": null,
       "observedAt": "2026-09-27"
+    },
+    {
+      "fullName": "wrever/ArcusX",
+      "url": "https://github.com/wrever/ArcusX",
+      "curatedCountries": [
+        "Chile"
+      ],
+      "note": "Proyecto fundado en Chile por Bruno Miranda (Universidad Tecnológica Metropolitana de Chile), confirmado por el fundador en su nota del blog de Tellus del 2026-06-08. Su build de Stellar Hack+ Buenos Aires 2025 queda como participación en un evento distinto."
     }
   ],
   "builders": [

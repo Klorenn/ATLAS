@@ -52,8 +52,25 @@ const extras = JSON.parse(
 const knownRepos = new Set(
   (catalog.repositories || []).map((r) => normRepoKey(r.url)).filter(Boolean),
 );
+
+// La curaduría es aditiva, no sustitutiva: una entrada en curated-additions
+// para un repo que la fuente ya trae conserva sus campos y recibe solo los
+// campos curados explícitos. Las entradas nuevas se agregan como antes.
+const CURATED_ADDITIVE_FIELDS = ['curatedPrograms', 'curatedCountries', 'curatedCategory', 'note'];
+const extrasByUrl = new Map(
+  (extras.repositories || []).map((r) => [normRepoKey(r.url), r]).filter(([key]) => Boolean(key)),
+);
+catalog.repositories = (catalog.repositories || []).map((r) => {
+  const extra = extrasByUrl.get(normRepoKey(r.url));
+  if (!extra) return r;
+  const additive = {};
+  for (const field of CURATED_ADDITIVE_FIELDS) {
+    if (extra[field] !== undefined) additive[field] = extra[field];
+  }
+  return { ...r, ...additive };
+});
 catalog.repositories = [
-  ...(catalog.repositories || []),
+  ...catalog.repositories,
   ...(extras.repositories || []).filter((r) => !knownRepos.has(normRepoKey(r.url))),
 ];
 
