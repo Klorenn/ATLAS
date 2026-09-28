@@ -103,6 +103,8 @@ function RepoDialog({ repo, related, onClose }: { repo: Repository; related: Rep
     ['Stars', repo.stars == null ? '—' : String(repo.stars)],
     ['Updated', timeAgo(repo.updatedAt)],
     ['Evidence', repo.evidence || '—'],
+    // Solo aparece en entradas curadas a mano: la fuente no publica un motivo.
+    ...(repo.curatedNote ? ([['Curated', repo.curatedNote]] as [string, string][]) : []),
   ];
   // El builder no vive en la tabla de info porque necesita ser enlace o texto
   // según haya perfil verificado o no.

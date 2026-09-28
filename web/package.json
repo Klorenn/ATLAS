@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port 3002",
     "data": "node scripts/extract-catalog.mjs",
+    "passport": "node scripts/fetch-passport.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 3002"
   },

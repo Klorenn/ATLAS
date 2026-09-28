@@ -22,6 +22,8 @@ npm run dev
 
 Requires Node.js `^18.0.0 || >=20.0.0` and npm. No environment variables are needed: the catalog snapshot in `web/public/data/catalog.json` is committed.
 
+Only `npm run passport` needs one, and only to refresh the Passport snapshot that is already committed. Put `PASSPORT_API_KEY=pk_...` in a `.env` at the repository root. Never commit it, and never move it into `src/`: `pk_...` is an organization bearer, and anything under `src/` ends up in the bundle.
+
 `@supabase/supabase-js` is installed but not imported anywhere yet. It is reserved for a planned edge function that will refresh the catalog automatically. Leave it in `package.json`.
 
 The React app under `web/` is the primary experience. The files at the repository root are the standalone vanilla explorer and need no build step.
@@ -41,6 +43,18 @@ The React app under `web/` is the primary experience. The files at the repositor
    It runs `tsc --noEmit` before bundling, so type errors fail it. There is no linter, formatter or test suite configured yet.
 
 6. Check the result in the browser, in both a narrow and a wide viewport.
+
+## Adding a repository
+
+`/add` prepares an entry for `web/data/curated-additions.json`; it does not write to the repository. Copy the generated block there, run `npm run data`, and commit both files.
+
+The rules that make a curated entry trustworthy:
+
+- **Separate what the source says from what you infer.** A category derived from repository topics is a suggestion and the page labels it as one. Correct it if the topic lies, and correct the topic if the label is right.
+- **A blank field is not `false`.** Unchecked boxes are left out entirely. `null` means unknown; `false` is a claim.
+- **An organization is not a person.** GitHub owners are frequently org accounts. If you do not know who writes the code, leave `builderName` empty and let attribution fall back to the owner.
+- **Curated values add, they do not overwrite.** `curatedPrograms`, `curatedCountries` and `curatedCategory` sit on top of what the source already contributed. A repository curated as an InstaWards entry keeps its hackathon badge.
+- **Say where it came from.** Use the note field for the event name or the link that justifies the entry. An entry that cannot be traced back to something does not belong in the catalog.
 
 ## Commit messages
 

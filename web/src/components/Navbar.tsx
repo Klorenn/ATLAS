@@ -34,9 +34,15 @@ export default function Navbar() {
             </motion.a>
           ))}
         </div>
-        <div className="hidden md:block">
+        <div className="hidden md:flex items-center gap-5">
           <a
-            href="#explore"
+            href={`${import.meta.env.BASE_URL}add`}
+            className="text-teal-ink/70 text-sm font-medium hover:text-teal-ink transition-colors"
+          >
+            Add repo
+          </a>
+          <a
+            href={`${import.meta.env.BASE_URL}#explore`}
             className="group inline-flex items-center justify-center gap-2 rounded-full bg-clay-deep text-sand font-medium text-sm px-5 py-3 transition-all hover:bg-clay active:scale-[0.98]"
           >
             <span>Browse repositories</span>

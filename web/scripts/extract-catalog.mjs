@@ -169,6 +169,13 @@ const repositories = (catalog.repositories || []).map((r) => {
     sourceType: r.sourceType ?? null,
     evidence: r.associationEvidence ?? null,
     observedAt: r.observedAt ?? null,
+    // Curaduría explícita desde web/data/curated-additions.json. Se emite
+    // solo si hay valor: 6824 repositorios con cuatro null de relleno suman
+    // medio megabyte de JSON para representar la ausencia de algo.
+    ...(r.curatedPrograms ? { curatedPrograms: r.curatedPrograms } : {}),
+    ...(r.curatedCountries ? { curatedCountries: r.curatedCountries } : {}),
+    ...(r.curatedCategory ? { curatedCategory: r.curatedCategory } : {}),
+    ...(r.note ? { curatedNote: r.note } : {}),
     curatedBuilder: builderByRepo.get(key) ?? null,
     hackathon: builds.length > 0,
     builds: builds.slice(0, 8),

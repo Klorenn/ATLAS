@@ -49,6 +49,8 @@ export interface Repository {
   projectSlug: string | null;
   projectStatus: string | null;
   evidence: string | null;
+  /** Motivo de una curaduría manual. null cuando la entrada viene de la fuente. */
+  curatedNote: string | null;
   hackathon: boolean;
   builds: HackBuild[];
   builder: Builder | null;
@@ -125,6 +127,10 @@ export const COUNTRY_PROGRAMS: Record<string, { slug: string; name: string }> = 
 export const PROGRAM_LABELS: Record<string, string> = {
   scf: 'SCF',
   hackathon: 'Hackathon',
+  // Passport publica InstaWards como `format` de hackathon. Atlas lo expone
+  // como programa propio para poder filtrarlo aparte.
+  instawards: 'InstaWards',
+  community: 'Community',
   chile: 'Chile',
   brazil: 'Brazil',
   argentina: 'Argentina',
@@ -185,6 +191,11 @@ interface RawRepo {
   evidence: string | null;
   observedAt: string | null;
   curatedBuilder?: CuratedBuilder | null;
+  // Curaduría explícita desde web/data/curated-additions.json.
+  curatedPrograms?: string[] | null;
+  curatedCountries?: string[] | null;
+  curatedCategory?: string | null;
+  curatedNote?: string | null;
   hackathon?: boolean;
   builds?: HackBuild[];
 }
@@ -233,7 +244,12 @@ export async function loadCatalog(
     const project = primarySlug ? bySlug.get(primarySlug) || null : null;
     const owner = r.fullName.split('/')[0] || null;
     const builds: HackBuild[] = r.builds ?? [];
-    const countries = [...new Set(builds.map((b) => b.country).filter((c): c is string => !!c))];
+    // La curaduría suma a lo derivado: son fuentes distintas, no
+    // correcciones. Un repo sin build y curado como InstaWards queda con
+    // ambos programas, y uno curado como Chile conserva su hackathon.
+    const countries = [
+      ...new Set([...builds.map((b) => b.country), ...(r.curatedCountries || [])].filter((c): c is string => !!c)),
+    ];
     const programs: string[] = [];
     if (project && project.scfAwarded) programs.push('scf');
     if (r.hackathon) programs.push('hackathon');
@@ -241,10 +257,24 @@ export async function loadCatalog(
       const regional = COUNTRY_PROGRAMS[c];
       if (regional && !programs.includes(regional.slug)) programs.push(regional.slug);
     }
+    for (const p of r.curatedPrograms || []) {
+      if (!programs.includes(p)) programs.push(p);
+    }
     let category = project ? categoriesFor(project) : ['Other'];
     if (category.length === 1 && category[0] === 'Other' && builds.length > 0) {
       const slug = (builds[0].eventSlug || '').toLowerCase();
       category = slug.includes('ideaton') || slug.includes('ideathon') ? ['Ideathon'] : ['Hackathon'];
+    }
+    if (r.curatedCategory) {
+      // 'Other' es un fallback, no una clasificación: si es lo único que hay,
+      // la curaduría lo reemplaza en vez de quedar al lado. Cuando ya hay
+      // categorías reales, se suma.
+      category =
+        category.length === 1 && category[0] === 'Other'
+          ? [r.curatedCategory]
+          : category.includes(r.curatedCategory)
+            ? category
+            : [...category, r.curatedCategory];
     }
     const person = builds.find((b) => b.winner && b.builder) || builds.find((b) => b.builder);
     // La atribución curada gana: una organización no es quien escribe el
@@ -293,6 +323,7 @@ export async function loadCatalog(
       projectSlug: primarySlug,
       projectStatus: project?.status || null,
       evidence: r.evidence,
+      curatedNote: r.curatedNote ?? null,
     };
   });
 

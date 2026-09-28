@@ -110,6 +110,36 @@ npm run data
 
 > `scripts/extract-catalog.mjs` reads the raw dataset from a `data/` directory three levels above `web/`. That dataset lives in the Tellus Cooperative roadmap workspace and is not part of this repository, so running `npm run data` outside that workspace will fail. Day-to-day development does not need it: the generated snapshot is already committed.
 
+### Sync the Passport snapshot
+
+```bash
+npm run passport
+```
+
+`scripts/fetch-passport.mjs` reads Stellar Passport (hackathons and builder profiles) and writes `web/public/data/passport.json`, which the `/add` page uses to match a repository against known builders. The committed snapshot is enough for development; re-run only to refresh it.
+
+It needs a Passport API key in a `.env` at the repository root:
+
+```bash
+PASSPORT_API_KEY=pk_...
+```
+
+Two constraints shape where this runs. Passport sends no CORS headers, on the GET or on the OPTIONS preflight, so the browser cannot call it. And `pk_...` is an organization bearer: in a Vite bundle it would be readable by anyone opening DevTools. So the sync runs in Node and publishes a file. GitHub is the opposite case: it allows CORS, so `/add` queries it directly from the browser and needs no key.
+
+The current base URL is `https://demo.stellarpassport.xyz/api/v1`, a demo instance. Check what it holds before treating its contents as the real Passport population.
+
+### Add a repository
+
+`/add` reads a GitHub path, proposes a category from the repository topics, and assembles a `curated-additions.json` entry with the programs, country, and builder you select. Values the source does not publish stay `null` and render as "—"; a category suggestion is a suggestion, not a classification.
+
+The page does not write to the repository. To publish an entry:
+
+1. Paste the generated block into `web/data/curated-additions.json`, under `repositories` and, if you named a builder, `builders`.
+2. Run `npm run data` to regenerate `web/public/data/catalog.json`.
+3. Commit both files.
+
+`curatedPrograms`, `curatedCountries`, and `curatedCategory` add to what the source already says. They do not replace it: a repository curated as `instawards` keeps its hackathon badge, and a country from a hackathon build stays.
+
 ## Project structure
 
 ```text
@@ -117,12 +147,13 @@ npm run data
 ├── assets/readme/        Images used by this README
 ├── web/                  The ATLAS application
 │   ├── public/
-│   │   ├── data/         Catalog snapshot (catalog.json, stats.json)
+│   │   ├── data/         Catalog snapshot (catalog.json, stats.json, passport.json)
 │   │   └── logos/        Ecosystem logos used in the landing page
-│   ├── scripts/          Node script that generates the catalog snapshot
+│   ├── scripts/          Node scripts that generate the snapshots
 │   └── src/
-│       ├── components/   Landing sections and the Explorer
+│       ├── components/   Landing sections, the Explorer, and AddRepository
 │       ├── lib/          catalog.ts (data model, filters, sorting, URL state)
+│       │                 curate.ts (GitHub analysis, entry assembly)
 │       └── data.ts       Static copy for the landing page
 ├── index.html            Standalone page mounting the vanilla explorer
 ├── explorer.js
