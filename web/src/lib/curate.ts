@@ -34,11 +34,41 @@ export interface PassportBuilder {
   visibility: Record<string, boolean> | null;
 }
 
+/**
+ * Un proyecto se identifica por `builderLogin/slug`. El slug solo no alcanza:
+ * en la sincronización del 2026-09-28 dos builders distintos tienen un proyecto
+ * `arcusx`.
+ */
+export interface PassportProject {
+  key: string;
+  slug: string | null;
+  name: string | null;
+  builderLogin: string;
+  shortDescription: string | null;
+  status: string | null;
+  tags: string[];
+  websiteUrl: string | null;
+  repos: string[];
+}
+
+export interface PassportRepo {
+  fullName: string;
+  url: string | null;
+  language: string | null;
+  stars: number | null;
+  forks: number | null;
+  description: string | null;
+  /** Un repo puede colgar de más de un proyecto. */
+  projects: { key: string; slug: string | null; builderLogin: string }[];
+}
+
 export interface PassportSnapshot {
   observedAt: string | null;
-  counts: { hackathons: number; builders: number };
+  counts: { hackathons: number; builders: number; projects: number; repos: number };
   hackathons: PassportHackathon[];
   builders: PassportBuilder[];
+  projects: PassportProject[];
+  repos: PassportRepo[];
 }
 
 export interface RepoAnalysis {
@@ -244,6 +274,35 @@ export function crossCheckPassport(
   return { builder, visibility: builder?.visibility ?? null };
 }
 
+/**
+ * El mismo repositorio, buscado por nombre en el registro de Passport.
+ *
+ * Esta búsqueda es mejor que cruzar por el owner de GitHub para atribuir, y no
+ * por una preferencia: no coinciden. El 2026-09-28, `SendaLabs/Senda.App`
+ * figura en Passport bajo el builder `delfinacorr`, y `StellarViewOrg/
+ * stellarview-explorer` bajo dos proyectos de builders distintos. El owner de
+ * GitHub es una organización o la cuenta de deploy; el builder es quien se
+ * declara responsable del proyecto.
+ */
+export function passportRepoFor(
+  analysis: RepoAnalysis,
+  passport: PassportSnapshot | null,
+): PassportRepo | null {
+  if (!passport) return null;
+  const id = analysis.fullName.toLowerCase();
+  return passport.repos.find((r) => r.fullName.toLowerCase() === id) || null;
+}
+
+/** Los proyectos que Passport le atribuye a un builder, por login de GitHub. */
+export function passportProjectsFor(
+  login: string | null,
+  passport: PassportSnapshot | null,
+): PassportProject[] {
+  if (!passport || !login) return [];
+  const id = login.toLowerCase();
+  return passport.projects.filter((p) => p.builderLogin.toLowerCase() === id);
+}
+
 /** InstaWards es un `format` de hackathon en Passport, no un programa aparte. */
 export function passportHackathons(passport: PassportSnapshot | null): PassportHackathon[] {
   return passport?.hackathons ?? [];
@@ -278,6 +337,12 @@ export function buildEntry(opts: {
   category: string | null;
   note: string;
   observedAt: string;
+  /**
+   * De dónde salió la atribución. La nota por defecto depende de esto: un
+   * builder declarado en Passport es evidencia propia, mientras que el owner
+   * de GitHub suele ser la organización y no la persona que escribe el código.
+   */
+  builderEvidence?: 'passport' | 'owner' | null;
 }): { repository: CuratedRepository; builder: CuratedBuilderEntry | null } {
   const { analysis } = opts;
   const fullName = analysis.fullName;
@@ -325,7 +390,9 @@ export function buildEntry(opts: {
         observedAt: opts.observedAt,
         note:
           opts.note.trim() ||
-          'Attribution curated by hand from /add. The repository owner is an organization, not a person.',
+          (opts.builderEvidence === 'passport'
+            ? 'Builder declaration imported from Stellar Passport.'
+            : 'Attribution curated by hand from /add. The repository owner is an organization, not a person.'),
       }
     : null;
 

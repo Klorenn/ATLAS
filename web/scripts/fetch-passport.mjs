@@ -113,10 +113,39 @@ const toBuilder = (b) => ({
   bio: b.bio ?? null,
   roleTitle: b.role_title ?? null,
   scfTier: b.scf_tier ?? null,
-  projects: b.projects ?? [],
   // La visibilidad la elige el builder. Se conserva para que la interfaz pueda
   // respetarla, pero un campo presente en el payload no autoriza a mostrarlo.
   visibility: b.visibility ?? null,
+});
+
+/**
+ * Un proyecto se identifica por `builderLogin/slug`, no por el slug solo: en la
+ * sincronización del 2026-09-28 dos builders distintos tienen un proyecto
+ * `arcusx`, así que el slug no es una clave global.
+ */
+const toProject = (p, builderLogin) => ({
+  key: `${builderLogin}/${p.slug}`,
+  slug: p.slug ?? null,
+  name: p.name ?? null,
+  builderLogin,
+  shortDescription: p.short_description ?? null,
+  status: p.status ?? null,
+  tags: p.tags ?? [],
+  websiteUrl: p.website_url ?? null,
+  demoUrl: p.demo_url ?? null,
+  docsUrl: p.docs_url ?? null,
+  scfUrl: p.scf_url ?? null,
+  contractAddress: p.contract_address ?? null,
+  repos: (p.repos || []).map((r) => r.full_name).filter(Boolean),
+});
+
+const toRepo = (r) => ({
+  fullName: r.full_name ?? null,
+  url: r.html_url ?? null,
+  language: r.primary_language ?? null,
+  stars: typeof r.stars === 'number' ? r.stars : null,
+  forks: typeof r.forks === 'number' ? r.forks : null,
+  description: r.description ?? null,
 });
 
 const [hackathons, builders, bounties] = await Promise.all([
@@ -125,9 +154,10 @@ const [hackathons, builders, bounties] = await Promise.all([
   collect('/bounties', 'bounties').catch(() => []),
 ]);
 
-// El detalle de un builder trae campos que la lista omite (scf_tier,
-// visibility). El volcado completo excede el rate limit razonable, así que solo
-// se detalla quien aporta un valor que la lista no trae.
+// El detalle de un builder trae lo que la lista omite (`scf_tier`,
+// `visibility`). Los proyectos y sus repositorios ya vienen en la lista, así que
+// detallar no es necesario para conseguirlos: el detalle solo compra esos dos
+// campos, y pagarlo para todos sería una request por builder a cambio de poco.
 //
 // `builders` son filas crudas, en snake_case: hay que normalizar antes de leer
 // `githubUsername`, o el filtro no encuentra a nadie y el detalle nunca corre.
@@ -148,6 +178,47 @@ const byUsername = new Map(
 );
 const merged = listed.map((b) => byUsername.get(String(b.githubUsername || '').toLowerCase()) || b);
 
+// Proyectos y repositorios salen a nivel superior en vez de quedar anidados
+// dentro de cada builder. Anidado, la interfaz tiene que recorrer el árbol para
+// responder "¿qué proyectos tiene este builder?" o "¿qué repo es este?"; plano,
+// son dos índices con una clave cada uno.
+const projectIndex = new Map();
+const repoIndex = new Map();
+
+for (const row of builders) {
+  const login = row.github_username ?? null;
+  if (!login) continue;
+  for (const p of row.projects || []) {
+    if (!p.slug) continue;
+    const project = toProject(p, login);
+    // Dos filas del mismo builder pueden repetir el proyecto: se fusionan en
+    // vez de duplicar la entrada.
+    const prev = projectIndex.get(project.key);
+    if (prev) {
+      prev.repos = [...new Set([...prev.repos, ...project.repos])].sort();
+      continue;
+    }
+    projectIndex.set(project.key, project);
+
+    for (const r of p.repos || []) {
+      const fullName = r.full_name ?? null;
+      if (!fullName) continue;
+      const id = fullName.toLowerCase();
+      // Un repo puede pertenecer a más de un proyecto, así que la relación se
+      // guarda como lista de referencias y no como un único propietario.
+      const entry = repoIndex.get(id) || { ...toRepo(r), projects: [] };
+      entry.projects.push({ key: project.key, slug: project.slug, builderLogin: login });
+      repoIndex.set(id, entry);
+    }
+  }
+}
+
+const projects = [...projectIndex.values()].sort((a, b) => a.key.localeCompare(b.key));
+
+const repos = [...repoIndex.values()]
+  .map((r) => ({ ...r, projects: r.projects.sort((a, b) => a.key.localeCompare(b.key)) }))
+  .sort((a, b) => String(a.fullName).localeCompare(String(b.fullName)));
+
 const snapshot = {
   observedAt,
   source: 'stellar-passport',
@@ -155,15 +226,21 @@ const snapshot = {
   counts: {
     hackathons: hackathons.length,
     builders: merged.length,
+    projects: projects.length,
+    repos: repos.length,
     bounties: bounties.length,
   },
   hackathons: hackathons.map(toHackathon),
   builders: merged,
+  projects,
+  repos,
 };
 
 await writeFile(OUT, `${JSON.stringify(snapshot)}\n`);
 
 console.log(`Hackathons: ${hackathons.length}`);
 console.log(`Builders: ${merged.length}`);
+console.log(`Projects: ${projects.length}`);
+console.log(`Repos: ${repos.length}`);
 console.log(`Bounties: ${bounties.length}`);
 console.log(`Salida: public/data/passport.json (observedAt ${observedAt})`);

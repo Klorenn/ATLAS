@@ -116,7 +116,9 @@ npm run data
 npm run passport
 ```
 
-`scripts/fetch-passport.mjs` reads Stellar Passport (hackathons and builder profiles) and writes `web/public/data/passport.json`, which the `/add` page uses to match a repository against known builders. The committed snapshot is enough for development; re-run only to refresh it.
+`scripts/fetch-passport.mjs` reads Stellar Passport (hackathons, builder profiles, projects, and the repositories each project files) and writes `web/public/data/passport.json`, which the `/add` page uses to match a repository against known builders and projects. The committed snapshot is enough for development; re-run only to refresh it.
+
+Projects and repositories live at the top level of the snapshot, not nested inside builders. A project is keyed by `builderLogin/slug` because the slug alone is not unique across builders, and a repository is keyed by `full_name` because one repository can belong to more than one project. `/add` resolves a repository by name, which attributes better than the GitHub owner: the owner is frequently the organization, while the declared builder is the person responsible for the project.
 
 It needs a Passport API key in a `.env` at the repository root:
 
@@ -130,7 +132,7 @@ The current base URL is `https://demo.stellarpassport.xyz/api/v1`, a demo instan
 
 ### Add a repository
 
-`/add` reads a GitHub path, proposes a category from the repository topics, and assembles a `curated-additions.json` entry with the programs, country, and builder you select. Values the source does not publish stay `null` and render as "—"; a category suggestion is a suggestion, not a classification.
+`/add` reads a GitHub path, proposes a category from the repository topics, and assembles a `curated-additions.json` entry with the programs, country, and builder you select. When Passport has the repository on record, it shows the declared project(s) and builder, and "Use this builder" attributes the entry to that person instead of the GitHub owner. Values the source does not publish stay `null` and render as "—"; a category suggestion is a suggestion, not a classification.
 
 The page does not write to the repository. To publish an entry:
 

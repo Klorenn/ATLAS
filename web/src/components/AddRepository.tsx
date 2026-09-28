@@ -10,6 +10,7 @@ import {
   isInstawards,
   parseRepoInput,
   passportHackathons,
+  passportRepoFor,
   type CuratedBuilderEntry,
   type CuratedRepository,
   type PassportSnapshot,
@@ -49,6 +50,7 @@ export default function AddRepository() {
   const [countries, setCountries] = useState<string[]>([]);
   const [category, setCategory] = useState(empty);
   const [builderName, setBuilderName] = useState(empty);
+  const [passportBuilder, setPassportBuilder] = useState<string | null>(null);
   const [note, setNote] = useState(empty);
 
   const abort = useRef<AbortController | null>(null);
@@ -76,6 +78,7 @@ export default function AddRepository() {
     setCountries([]);
     setCategory(empty);
     setBuilderName(empty);
+    setPassportBuilder(null);
     setNote(empty);
     setError(null);
     setCopied(false);
@@ -113,6 +116,14 @@ export default function AddRepository() {
     [analysis, passport],
   );
 
+  // Passport registra el repositorio por nombre, y eso atribuye mejor que el
+  // owner de GitHub: el owner es la organización o la cuenta de deploy, y el
+  // builder es quien se declaró responsable del proyecto.
+  const passportRepo = useMemo(
+    () => (analysis ? passportRepoFor(analysis, passport) : null),
+    [analysis, passport],
+  );
+
   // InstaWards es un `format` de hackathon en Passport. Al marcarlo se marca el
   // programa, porque en Atlas el filtro se llama así.
   const hackathons = useMemo(() => passportHackathons(passport), [passport]);
@@ -124,20 +135,29 @@ export default function AddRepository() {
 
   const built = useMemo(() => {
     if (!analysis) return null;
+    // La atribución viene de Passport cuando el builder pulsó "Use this
+    // builder". El login y la URL siguen al builder declarado, no al owner del
+    // repositorio: para `SendaLabs/Senda.App` el owner es la organización
+    // SendaLabs y el builder es `delfinacorr`, así que usar el owner dejaría
+    // un `builderUrl` apuntando a la organización.
+    const declared = passportBuilder || analysis.owner?.login || null;
     const { repository, builder } = buildEntry({
       analysis,
-      builderName: builderName.trim() || null,
-      builderLogin: analysis.owner?.login || null,
-      builderUrl: analysis.owner ? `https://github.com/${analysis.owner.login}` : null,
+      builderName: builderName.trim() || (passportBuilder ? passportBuilder : null),
+      builderLogin: declared,
+      builderUrl: declared ? `https://github.com/${declared}` : null,
       organization: analysis.owner?.type === 'Organization' ? analysis.owner.login : null,
       programs,
       countries,
       category: category || null,
       note,
+      // La procedencia de la atribución cambia la nota: un builder declarado en
+      // Passport es evidencia, el owner de GitHub es un default.
+      builderEvidence: passportBuilder ? 'passport' : 'owner',
       observedAt: today(),
     });
     return { repository, builder };
-  }, [analysis, programs, countries, category, builderName, note]);
+  }, [analysis, passportBuilder, programs, countries, category, builderName, note]);
 
   const payload = useMemo(() => {
     if (!built) return empty;
@@ -196,7 +216,8 @@ export default function AddRepository() {
       {passport ? (
         <p className="mt-2 text-xs text-teal-deep/70">
           Passport synced {passport.observedAt} · {passport.counts.builders} builders ·{' '}
-          {passport.counts.hackathons} hackathons
+          {passport.counts.projects} projects · {passport.counts.repos} repos ·{' '}
+          {passport.counts.hackathons} {passport.counts.hackathons === 1 ? 'hackathon' : 'hackathons'}
         </p>
       ) : (
         <p className="mt-2 text-xs text-teal-deep/70">
@@ -242,20 +263,67 @@ export default function AddRepository() {
             </div>
           ) : null}
 
-          {passportMatch.builder ? (
-            <div className="rounded-xl border border-teal-ink/15 bg-white/50 p-4">
-              <p className="text-[11px] uppercase tracking-widest text-teal-deep/70">Passport match</p>
-              <p className="mt-1.5 text-sm text-teal-ink">
-                {passportMatch.builder.displayName || `@${passportMatch.builder.githubUsername}`}
-                {passportMatch.builder.stellarAddress ? (
-                  <span className="text-teal-deep"> · {passportMatch.builder.stellarAddress}</span>
-                ) : null}
+          {passportRepo ? (
+            <div className="rounded-xl border border-teal-ink/20 bg-white/60 p-4">
+              <p className="text-[11px] uppercase tracking-widest text-teal-deep/70">
+                Known to Passport
               </p>
-              {passportMatch.visibility ? (
-                <p className="mt-1 text-xs text-teal-deep/70">
-                  Passport declara qué campos son públicos. Lo no declarado no se muestra.
+              {passportRepo.projects.map((ref) => {
+                const project = passport?.projects.find((p) => p.key === ref.key) || null;
+                const builder = passportMatch.builder;
+                return (
+                  <div key={ref.key} className="mt-2">
+                    <p className="text-sm font-semibold text-teal-ink">
+                      {project?.name || ref.slug}
+                      {project?.status ? (
+                        <span className="ml-2 text-xs font-normal text-teal-deep/70">
+                          {project.status}
+                        </span>
+                      ) : null}
+                    </p>
+                    {project?.shortDescription ? (
+                      <p className="mt-0.5 text-xs text-teal-deep">{project.shortDescription}</p>
+                    ) : null}
+                    <p className="mt-1 text-xs text-teal-deep/70">
+                      Builder: {ref.builderLogin}
+                      {builder?.displayName ? ` · ${builder.displayName}` : ''}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPassportBuilder(ref.builderLogin);
+                        setBuilderName(ref.builderLogin);
+                        setNote(
+                          `Builder attributed by Stellar Passport (project ${ref.key}).`,
+                        );
+                      }}
+                      className="mt-2 rounded-full border border-teal-ink/20 text-xs font-medium px-3 py-1.5 text-teal-deep hover:bg-teal-ink/5"
+                    >
+                      Use this builder
+                    </button>
+                  </div>
+                );
+              })}
+              {passportRepo.projects.length > 1 ? (
+                <p className="mt-3 text-xs text-teal-deep/70">
+                  Passport files this repository under more than one project. Pick the one that
+                  matches the curation.
                 </p>
               ) : null}
+              {passportMatch.visibility ? (
+                <p className="mt-2 text-xs text-teal-deep/70">
+                  Passport declara qué campos son públicos; lo no declarado no se muestra.
+                </p>
+              ) : null}
+            </div>
+          ) : passportMatch.builder ? (
+            <div className="rounded-xl border border-teal-ink/15 bg-white/50 p-4">
+              <p className="text-[11px] uppercase tracking-widest text-teal-deep/70">Passport profile</p>
+              <p className="mt-1.5 text-sm text-teal-ink">
+                The owner has a Passport profile:{' '}
+                {passportMatch.builder.displayName || `@${passportMatch.builder.githubUsername}`}.
+                No project on record for this repository.
+              </p>
             </div>
           ) : null}
 
