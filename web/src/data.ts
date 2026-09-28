@@ -1,9 +1,9 @@
 // Atlas content wired to the real catalog figures.
-// Summary (2026-09-27): 1,142 projects · 6,823 repositories · 606 SCF-funded.
+// Summary (2026-09-28): 1,143 projects · 6,864 repositories · 606 SCF-funded.
 
 export const ATLAS_STATS = {
-  repositories: '6,823',
-  projects: '1,142',
+  repositories: '6,864',
+  projects: '1,143',
   scfProjects: '606',
 };
 

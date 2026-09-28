@@ -64,7 +64,7 @@ export default function FeatureExplore() {
         transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         className="liquid-glass rounded-2xl p-5"
       >
-        <p className="text-xs text-teal-deep mb-4">Today · 6,821 repositories indexed</p>
+        <p className="text-xs text-teal-deep mb-4">Today · 6,864 repositories indexed</p>
         <div className="grid grid-cols-2 gap-3">
           {GROUPS.map((g) => (
             <div key={g.title} className="rounded-lg border border-teal-ink/10 bg-white/50 p-3">

@@ -34,7 +34,7 @@ const PROGRAMS: Program[] = [
     headline: 'Open index',
     desc: 'The full open map. Free and open to explore.',
     features: [
-      '6,821 repositories indexed',
+      '6,864 repositories indexed',
       'Category and language filters',
       'Weekly catalog refreshes',
       'Open data with source evidence',

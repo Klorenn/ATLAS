@@ -26,7 +26,7 @@
       repoType: p.get('repoType') || 'all', sort: p.get('sort') || 'updated',
       view: p.get('view') === 'grid' ? 'grid' : 'list',
       page: Math.max(1, parseInt(p.get('page') || '1', 10) || 1),
-      limit: [24, 48, 96].indexOf(parseInt(p.get('limit') || '24', 10)) !== -1 ? parseInt(p.get('limit'), 10) : DEFAULT_LIMIT
+      limit: [24, 48, 96].indexOf(parseInt(p.get('limit') || '24', 10)) !== -1 ? parseInt(p.get('limit') || '24', 10) : DEFAULT_LIMIT
     };
   }
 

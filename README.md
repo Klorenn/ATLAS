@@ -3,7 +3,7 @@
 An open observatory for discovering projects and repositories across the Stellar ecosystem.
 
 [![status: live](https://img.shields.io/badge/status-live-3F8487?style=flat-square&labelColor=1F3536)](https://atlastelluscoop.vercel.app/)
-[![catalog: 6,824 repositories](https://img.shields.io/badge/catalog-6%2C824%20repositories-3F8487?style=flat-square&labelColor=1F3536)](web/public/data/catalog.json)
+[![catalog: 6,864 repositories](https://img.shields.io/badge/catalog-6%2C864%20repositories-3F8487?style=flat-square&labelColor=1F3536)](web/public/data/catalog.json)
 [![license: MIT](https://img.shields.io/badge/license-MIT-1F3536?style=flat-square&labelColor=1F3536)](LICENSE)
 [![built by Tellus Cooperative](https://img.shields.io/badge/built%20by-Tellus%20Cooperative-ECE0CC?style=flat-square&labelColor=1F3536)](https://telluscoop.org)
 
@@ -119,6 +119,17 @@ npm run passport
 `scripts/fetch-passport.mjs` reads Stellar Passport (hackathons, builder profiles, projects, and the repositories each project files) and writes `web/public/data/passport.json`, which the `/add` page uses to match a repository against known builders and projects. The committed snapshot is enough for development; re-run only to refresh it.
 
 Projects and repositories live at the top level of the snapshot, not nested inside builders. A project is keyed by `builderLogin/slug` because the slug alone is not unique across builders, and a repository is keyed by `full_name` because one repository can belong to more than one project. `/add` resolves a repository by name, which attributes better than the GitHub owner: the owner is frequently the organization, while the declared builder is the person responsible for the project.
+
+To promote the declared repositories into the catalog, run the classic merge from the roadmap root after refreshing the snapshot:
+
+```bash
+node scripts/merge-passport-repos.mjs   # appends missing repos + builders to the canonical collections
+node scripts/validate-data.mjs
+node scripts/build-app-catalog.mjs
+cd tellus-atlas/web && npm run data
+```
+
+The merge is idempotent and only adds repositories Passport declares that no other source already brought in (40 of 89 on the 2026-09-28 snapshot). New records carry `source.type: "stellar-passport"`, `associationEvidence: "curado"`, stay linked to the Passport project slug, and leave `lastCommitAt` as `null` — Passport does not publish update dates.
 
 It needs a Passport API key in a `.env` at the repository root:
 

@@ -7,7 +7,7 @@ const Dithering = lazy(() =>
 
 // Atlas CTA band: Sand card (bg-card) with Teal Ink copy (AAA 10.1:1) and
 // a Clay dithering wash. Structure follows the pasted component; copy and
-// tokens are adapted to Atlas live figures (6,821 repos · 606 SCF-funded).
+// tokens are adapted to Atlas live figures (6,864 repos · 606 SCF-funded).
 export function CTASection() {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -50,7 +50,7 @@ export function CTASection() {
 
             {/* Description */}
             <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mb-12 leading-relaxed">
-              Join builders exploring 6,821 repositories across the Stellar
+              Join builders exploring 6,864 repositories across the Stellar
               ecosystem, with funding history and source evidence on every
               record.
             </p>
